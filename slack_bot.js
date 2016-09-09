@@ -1,9 +1,9 @@
 'use strict';
  
 let Botkit = require('botkit');
-let utils = require('utils.js');
-let server = require('server.js');
-const config = require("config.js");
+let utils = require('./utils.js');
+let server = require('./server.js');
+const config = require("./config.js");
 
 let slackbot = Botkit.slackbot({
   interactive_replies: true
@@ -56,5 +56,5 @@ slackbot.on('rtm_open',function(bot) {
 });
 
 slackbot.on('bot_group_join', (bot, message) => {
-  
+
 })

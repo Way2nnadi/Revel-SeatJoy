@@ -3,20 +3,20 @@
 let express = require('express');
 let server = express();     
 let bodyParser = require('body-parser');
-let utils = require('utils.js');
-let shellDb = require('db.js');
-let config = require('config.js');
+let path = require('path');
+let utils = require('./utils.js');
+let shellDb = require('./db.js');
+let config = require('./config.js');
 let date = new Date();
 
 // MIDDLEWARE
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 
-// ROUTES
-server.get('/', (req, res) => {
-  // send bot view
-});
+// HOMEPAGE MIDDLEWARE
+server.use('/', express.static(__dirname + '/public'));
 
+// ROUTES
 server.get('/retrieve/order', (req, res) => {
   utils.retrieveOrders()
   .then((data) => {

@@ -1,7 +1,7 @@
 'use strict';
 
 let rp = require('request-promise');
-const config = require("config.js");
+const config = require("./config.js");
 
 // OPTIONS
 
