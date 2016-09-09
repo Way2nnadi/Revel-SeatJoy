@@ -1,2 +1,2 @@
 # Revel-SeatJoy
-revel hackathon version of seatjoy
+Convenience in your carseat
