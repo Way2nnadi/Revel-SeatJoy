@@ -33,7 +33,6 @@ slackbot
  });
 
 slackbot.on('create_bot', (bot,config) => {
-  console.log(bot)
   if (_bots[bot.config.token]) {
     // already online! do nothing.
     // create loyalty logic

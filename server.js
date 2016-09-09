@@ -28,8 +28,11 @@ server.get('/retrieve/order', (req, res) => {
   .then((data) => {
     // console.log(data);
     // parse data and send to the bot
-    // res.send(utils.parseData(data));
-    res.send('ok');
+    res.send({
+      fuel: "$2.87",
+      snack: "$1"
+    });
+    // res.send('ok');
   })
   .catch((err) => {
     console.log(err);
@@ -42,7 +45,7 @@ server.post('/create/order', (req, res) => {
   {
     first_name: "",
     last_name: "",
-    orders: [], \\ example item in orders => {details: ""}
+    orders: [], \\ example item in orders => {details: "", transactionId: ""}
     phone_number: ""
   }
   **/
@@ -88,7 +91,7 @@ server.post('/create/order', (req, res) => {
       let buttonOpts = {
         channel: bot.group.id,
         text: "Order Status",
-        attachments: `${attachments.buttonPayload}`
+        attachments: attachments.buttonPayload
       };
       utils.sendSlackMessage(buttonOpts);
     })

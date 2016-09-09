@@ -8,14 +8,14 @@ function sendSlackMessageOptions(opts) {
   return {
     method: 'POST',
     uri: 'https://slack.com/api/chat.postMessage',
-    qs: {
-      token: config.token,
+    body: {
+      token: config.botToken,
       channel: opts.channel,
       text: opts.text,
-      attachments: opts.attachments,
-      as_user: true
+      attachments: JSON.stringify(opts.attachments)
     },
-    json: true
+    json: true,
+    charset: 'utf-8'
   }
 }
 
