@@ -58,6 +58,6 @@ module.exports = {
         }
     ]
   },
-  fulfill: "Thank you, the order has been fulfilled :ok_hand:🙌🤗👍",
+  fulfill: "Thank you, the order has been fulfilled",
   cancel: "Order has been canceled"
 }
