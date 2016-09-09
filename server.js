@@ -27,7 +27,6 @@ server.use('/', express.static(__dirname + '/public'));
 server.get('/retrieve/order', (req, res) => {
   utils.retrieveOrders()
   .then((data) => {
-    // console.log(data);
     // parse data and send to the bot
     // res.send(utils.parseData(data));
      res.send({
@@ -37,7 +36,8 @@ server.get('/retrieve/order', (req, res) => {
     //res.send('ok');
     res.send({
       fuel: "$2.87",
-      snack: "$1"
+      snack: "$1",
+      data: data
     });
   })
   .catch((err) => {
@@ -63,49 +63,35 @@ server.post('/create/order', (req, res) => {
     phone_number: '1-805-637-1990'
   }
   let date = new Date();
-  let attendant = shellDb.attendants[0];
+  // let attendant = shellDb.attendants[0];
 
-  let customerOpts = {
+  let customer = {
     first_name: body.first_name,
     last_name: body.last_name,
     channel_name: `${body.first_name.slice(0,4)} ${body.last_name.slice(0,4)}_${date.getTime()}`,
-    orders: body.orders || [],
+    orders: body.orders || [{detail: 'Diet Coke 1x', transactionId: "XXXXXXXX"}],
     phone_number: body.phone_number || "1-888-888-8888",
   };
 
   // create slack channel
-  utils.createPrivateChannel(customerOpts.channel_name)
+  utils.createPrivateChannel(customer.channel_name)
   .then((slack) => {
-    let botOpts = {
-      channel: slack.group.id,
-      user: config.botId
-    }
-
-    // invite bot
-    return utils.inviteUser(botOpts);
-  })
-  .then((bot) => {
-    // send slack channel order payload
-    let orderOpts = {
-      channel: bot.group.id,
-      text: "Order Details",
-      attachments: `${attachments.orderPayload(customerOpts)}`
-    };
-    utils.sendSlackMessage(orderOpts)
+    customer.channel_id = slack.group.id
+    customer.text = "Customer Details"
+    // send data to slackbot
+    utils.sendDataToSlackBot(customer)
     .then((data) => {
-      console.log(data);
-      let buttonOpts = {
-        channel: bot.group.id,
-        text: "Order Status",
-        attachments: attachments.buttonPayload
-      };
-      utils.sendSlackMessage(buttonOpts);
-    })
+      // invite bot
+      utils.inviteUser({
+        channel: slack.group.id,
+        user: config.botId
+      });
+    });
   })
   .then(() => {
 
     // update db with customer data
-    attendant.customers_serviced.push(customerOpts);
+    // attendant.customers_serviced.push(customer);
     res.send('ok');
   })
   .catch((err) => {
