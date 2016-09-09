@@ -3,7 +3,7 @@
 module.exports = {
   orderPayload: (opts) => {
     let payload = {
-      "text": "Here are the order details",
+      "text": "Order Details",
       "attachments": [
         {
           "text": `First Name: ${opts.first_name}, Last Name: ${opts.last_name}, Phone Number: ${opts.phone_number}`,
@@ -26,7 +26,7 @@ module.exports = {
     return payload;
   },
   buttonPayload: {
-    "text": "What is the order status?",
+    "text": "Order Status",
     "attachments": [
         {
             "text": "Choose order status",
@@ -37,7 +37,7 @@ module.exports = {
             "actions": [
                 {
                     "name": "fulfill",
-                    "text": "fulfill",
+                    "text": "Fulfill",
                     "type": "button",
                     "value": "fulfill"
                 },

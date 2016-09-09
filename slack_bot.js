@@ -7,6 +7,7 @@ let Promise = require('bluebird');
 const config = require("./config.js");
 const attachments = require('./attachments.js');
 
+console.log(attachments.buttonPayload)
 
 let channelStore = {};
 
@@ -73,17 +74,17 @@ slackbot.on('bot_group_join', (bot, message) => {
   console.log(customer)
   // send slack channel order payload
   let orderMessage = {
-    text: "Order Details_Diet Coke 1x",
+    text: "Order Details - Diet Coke x1",
     attachments: `${attachments.orderPayload(customer)}`
   };
 
-  spawnbot.replyAsync(message, orderMessage)
+  spawnbot.replyAsync(message, attachments.orderPayload(customer))
   .then(() => {
     let buttonMessage = {
-      text: "Order Status",
+      text: "Order Status - Fulfill   Cancel",
       attachments: attachments.buttonPayload
     };
-    bot.reply(message, buttonMessage);
+    bot.reply(message, attachments.buttonPayload);
   })
 })
 
@@ -98,7 +99,6 @@ slackbot.on('interactive_message_callback', (bot,message) => {
     })
   }
   bot.replyInteractive(message, attachments[status]);
-  bot.res.send('');
 });
 
 slackbot.on('slash_command', (bot, message) => {

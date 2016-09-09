@@ -15,8 +15,8 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(cors({
     allowedOrigins: [
-        'https://e03e1b8e.ngrok.io',
-        'https://e03e1b8e.ngrok.io/retrieve/order'
+        'https://40394d7a.ngrok.io',
+        'https://40394d7a.ngrok.io/retrieve/order'
     ]
 }))
 
@@ -29,10 +29,6 @@ server.get('/retrieve/order', (req, res) => {
   .then((data) => {
     // parse data and send to the bot
     // res.send(utils.parseData(data));
-     res.send({
-      fuel: "$2.87",
-      snack: "$1"
-    });
     //res.send('ok');
     res.send({
       fuel: "$2.87",
@@ -57,8 +53,8 @@ server.post('/create/order', (req, res) => {
   **/
   // let body = req.body;
   let body = {
-    first_name: 'uche',
-    last_name: 'nnadi',
+    first_name: 'Uche',
+    last_name: 'Nnadi',
     orders: [{details: "Diet Coke 1x"}],
     phone_number: '1-805-637-1990'
   }
@@ -69,7 +65,7 @@ server.post('/create/order', (req, res) => {
     first_name: body.first_name,
     last_name: body.last_name,
     channel_name: `${body.first_name.slice(0,4)} ${body.last_name.slice(0,4)}_${date.getTime()}`,
-    orders: body.orders || [{detail: 'Diet Coke 1x', transactionId: "XXXXXXXX"}],
+    orders: body.orders || [{detail: 'Diet Coke x1', transactionId: "XXXXXXXX"}],
     phone_number: body.phone_number || "1-888-888-8888",
   };
 
