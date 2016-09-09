@@ -4,18 +4,34 @@ let rp = require('request-promise');
 const config = require("./config.js");
 
 // OPTIONS
+function sendDataToSlackBotOptions(opts) {
+  return {
+    method: 'POST',
+    uri: 'https://40394d7a.ngrok.io/slack/receive',
+    body: {
+      command: '/post_msg',
+      team_id: config.teamId,
+      user_id: config.botId,
+      channel_id: opts.channel_id,
+      text: opts.text,
+      origin: 'server',
+      customer: opts || {}
+    },
+    json: true,
+  }
+}
+
 function sendSlackMessageOptions(opts) {
   return {
     method: 'POST',
     uri: 'https://slack.com/api/chat.postMessage',
-    body: {
+    qs: {
       token: config.botToken,
       channel: opts.channel,
       text: opts.text,
       attachments: JSON.stringify(opts.attachments)
     },
     json: true,
-    charset: 'utf-8'
   }
 }
 
@@ -93,6 +109,10 @@ function sendSlackMessage(opts) {
   return rp(sendSlackMessageOptions(opts));
 }
 
+function sendDataToSlackBot(opts) {
+  return rp(sendDataToSlackBotOptions(opts));
+}
+
 // HELPER FUNCTIONS
 function parserData(data) {
   return {};
@@ -104,5 +124,6 @@ module.exports = {
   parserData: parserData,
   createPrivateChannel: createPrivateChannel,
   inviteUser: inviteUser,
-  sendSlackMessage: sendSlackMessage
+  sendSlackMessage: sendSlackMessage,
+  sendDataToSlackBot: sendDataToSlackBot
 }

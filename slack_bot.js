@@ -3,8 +3,12 @@
 let Botkit = require('botkit');
 let utils = require('./utils.js');
 let server = require('./server.js');
+let Promise = require('bluebird');
 const config = require("./config.js");
 const attachments = require('./attachments.js');
+
+
+let channelStore = {};
 
 let slackbot = Botkit.slackbot({
   interactive_replies: true
@@ -15,11 +19,12 @@ slackbot.configureSlackApp({
   clientId: config.clientId,
   clientSecret: config.clientSecret,
   redirectUri: config.redirectUri,
-  scopes: ['chat:write:bot', 'bot'],
+  scopes: ['bot'],
 });
 
 let bot = slackbot.spawn({});
 let _bots = {};
+let spawnbot;
 
 function trackBot(bot) {
   _bots[bot.config.token] = bot;
@@ -33,6 +38,7 @@ slackbot
  });
 
 slackbot.on('create_bot', (bot,config) => {
+  spawnbot = bot;
   if (_bots[bot.config.token]) {
     // already online! do nothing.
     // create loyalty logic
@@ -60,14 +66,45 @@ slackbot.on('rtm_open', (bot) => {
 });
 
 slackbot.on('bot_group_join', (bot, message) => {
-  // console.log(bot + '----------bot---------')
+  Promise.promisifyAll(bot);
+  Promise.promisifyAll(spawnbot);
+
+  let customer = channelStore[message.channel];
+  console.log(customer)
+  // send slack channel order payload
+  let orderMessage = {
+    text: "Order Details_Diet Coke 1x",
+    attachments: `${attachments.orderPayload(customer)}`
+  };
+
+  spawnbot.replyAsync(message, orderMessage)
+  .then(() => {
+    let buttonMessage = {
+      text: "Order Status",
+      attachments: attachments.buttonPayload
+    };
+    bot.reply(message, buttonMessage);
+  })
 })
 
 slackbot.on('interactive_message_callback', (bot,message) => {
   let status = message.actions[0].name;
 
   if(status === "fulfill") {
+
     // update revel db
+    utils.submitOrders({
+
+    })
   }
   bot.replyInteractive(message, attachments[status]);
+  bot.res.send('');
+});
+
+slackbot.on('slash_command', (bot, message) => {
+  if (message.command === '/post_msg') {
+    channelStore[message.channel] = message.customer;
+    console.log(channelStore[message.channel])
+  }
+   bot.res.send('');
 });
