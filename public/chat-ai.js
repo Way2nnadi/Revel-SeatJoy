@@ -5177,14 +5177,17 @@ var requirejs, require, define;
     }), define("conversation", [], function() {
         var e = function(e) {
             return {
-                greeting: e.hasSeenChat ? [e.welcomeBackGreeting, "Still want to know more or just get in touch now?", {
+                greeting: e.hasSeenChat ? [e.welcomeBackGreeting, "How can I help you today?", {
                     type: "choose",
                     answers: [{
-                        text: "Shoot!",
-                        path: "tellmemore-second"
+                        text: "fuel ⛽",
+                        path: "fuel_options"
                     }, {
-                        text: "Get in touch!",
-                        path: "contact"
+                        text: "snacks 🍪",
+                        path: "snack_options"
+                    }, {
+                        text: "restroom 🚻",
+                        path: "restroom_options"
                     }]
                 }] : ["Hi there!", "I'm your Shell bot ⛽🤖.", "Here are some options for you to select:", {
                     type: "choose",
