@@ -4,6 +4,20 @@ let rp = require('request-promise');
 const config = require("./config.js");
 
 // OPTIONS
+function sendSlackMessageOptions(opts) {
+  return {
+    method: 'POST',
+    uri: 'https://slack.com/api/chat.postMessage',
+    qs: {
+      token: config.token,
+      channel: opts.channel,
+      text: opts.text,
+      attachments: opts.attachments,
+      as_user: true
+    },
+    json: true
+  }
+}
 
 function inviteUserOptions (opts) {
   return {
@@ -33,7 +47,7 @@ function createPrivateChannelOptions(name) {
 function retrieveOrdersOptions() {
   return {
     method: "GET",
-    uri: "https://****.revelup.com/weborders/menu/?establishment=2",
+    uri: "https://team7-hackathon.revelup.com/weborders/menu/?establishment=2",
     headers: {
       "API-AUTHENTICATION": config.apiKeySecret, 
     }
@@ -43,7 +57,7 @@ function retrieveOrdersOptions() {
 function submitOrderOptions(data) {
   return {
     method: "POST",
-    uri: "https://****.revelup.com/specialresources/cart/submit/",
+    uri: "https://team7-hackathon.revelup.com/specialresources/cart/submit/",
     headers: {
       "API-AUTHENTICATION": config.apiKeySecret, 
     },
@@ -75,6 +89,10 @@ function inviteUser(opts) {
   return rp(inviteUserOptions(opts));
 }
 
+function sendSlackMessage(opts) {
+  return rp(sendSlackMessageOptions(opts));
+}
+
 // HELPER FUNCTIONS
 function parserData(data) {
   return {};
@@ -86,4 +104,5 @@ module.exports = {
   parserData: parserData,
   createPrivateChannel: createPrivateChannel,
   inviteUser: inviteUser,
+  sendSlackMessage: sendSlackMessage
 }

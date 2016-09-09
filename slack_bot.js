@@ -4,6 +4,7 @@ let Botkit = require('botkit');
 let utils = require('./utils.js');
 let server = require('./server.js');
 const config = require("./config.js");
+const attachments = require('./attachments.js');
 
 let slackbot = Botkit.slackbot({
   interactive_replies: true
@@ -14,10 +15,15 @@ slackbot.configureSlackApp({
   clientId: config.clientId,
   clientSecret: config.clientSecret,
   redirectUri: config.redirectUri,
-  scopes: ['bot'],
+  scopes: ['chat:write:bot', 'bot'],
 });
 
-let bot = slackbot.spawn({})
+let bot = slackbot.spawn({});
+let _bots = {};
+
+function trackBot(bot) {
+  _bots[bot.config.token] = bot;
+}
 
 slackbot
 .createWebhookEndpoints(server)
@@ -27,8 +33,7 @@ slackbot
  });
 
 slackbot.on('create_bot', (bot,config) => {
-
-  spawnedBot = bot;
+  console.log(bot)
   if (_bots[bot.config.token]) {
     // already online! do nothing.
     // create loyalty logic
@@ -51,10 +56,19 @@ slackbot.on('create_bot', (bot,config) => {
 
 });
 
-slackbot.on('rtm_open',function(bot) {
+slackbot.on('rtm_open', (bot) => {
   console.log('** The RTM api just connected!');
 });
 
 slackbot.on('bot_group_join', (bot, message) => {
-
+  // console.log(bot + '----------bot---------')
 })
+
+slackbot.on('interactive_message_callback', (bot,message) => {
+  let status = message.actions[0].name;
+
+  if(status === "fulfill") {
+    // update revel db
+  }
+  bot.replyInteractive(message, attachments[status]);
+});
