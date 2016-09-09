@@ -5197,17 +5197,14 @@ xhr.send();
 
         var e = function(e) {
             return {
-                greeting: e.hasSeenChat ? [e.welcomeBackGreeting, "How can I help you today?", {
+                greeting: e.hasSeenChat ? [e.welcomeBackGreeting, "How can I help you today?", "By the way, You have 45 shell points.", "45 shell points=20cents off per gallon",'<img src="http://i.giphy.com/10UeedrT5MIfPG.gif"/>',"Wanna use your points?",{
                     type: "choose",
                     answers: [{
-                        text: "fuel ⛽",
+                        text: "Yeah ✔",
                         path: "fuel_options"
                     }, {
-                        text: "snacks 🍪",
-                        path: "snack_options"
-                    }, {
-                        text: "restroom 🚻",
-                        path: "restroom_options"
+                        text: "No 🚫",
+                        path: "choose"
                     }]
                 }] : ["Hi there!", "I'm your Shell bot ⛽🤖.", "How can I help you today?", {
                     type: "choose",
