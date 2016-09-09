@@ -15,7 +15,8 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(cors({
     allowedOrigins: [
-        'localhost'
+        'https://e03e1b8e.ngrok.io',
+        'https://e03e1b8e.ngrok.io/retrieve/order'
     ]
 }))
 
@@ -29,7 +30,11 @@ server.get('/retrieve/order', (req, res) => {
     // console.log(data);
     // parse data and send to the bot
     // res.send(utils.parseData(data));
-    res.send('ok');
+     res.send({
+      fuel: "$2.87",
+      snack: "$1"
+    });
+    //res.send('ok');
   })
   .catch((err) => {
     console.log(err);

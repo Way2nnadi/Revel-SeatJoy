@@ -1112,7 +1112,7 @@ var requirejs, require, define;
                 "\\": "\\",
                 "\r": "r",
                 "\n": "n",
-                "	": "t",
+                "   ": "t",
                 "\u2028": "u2028",
                 "\u2029": "u2029"
             },
@@ -5175,6 +5175,26 @@ var requirejs, require, define;
         };
         return e()
     }), define("conversation", [], function() {
+        var prices;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+        var status;
+        var data;
+        // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+        if (xhr.readyState == 4) { // `DONE`
+            status = xhr.status;
+            if (status == 200) {
+                data = JSON.parse(xhr.responseText);
+                prices=data.fuel;
+            } else {
+                errorHandler && errorHandler(status);
+            }
+        }
+    };
+
+xhr.open("GET", "https://e03e1b8e.ngrok.io/retrieve/order", false);
+xhr.send();
+
         var e = function(e) {
             return {
                 greeting: e.hasSeenChat ? [e.welcomeBackGreeting, "How can I help you today?", {
@@ -5189,7 +5209,7 @@ var requirejs, require, define;
                         text: "restroom 🚻",
                         path: "restroom_options"
                     }]
-                }] : ["Hi there!", "I'm your Shell bot ⛽🤖.", "Here are some options for you to select:", {
+                }] : ["Hi there!", "I'm your Shell bot ⛽🤖.", "How can I help you today?", {
                     type: "choose",
                     answers: [{
                         text: "fuel ⛽",
@@ -5200,6 +5220,16 @@ var requirejs, require, define;
                     }, {
                         text: "restroom 🚻",
                         path: "restroom_options"
+                    }]
+                }],
+                restroom_options: ["Happy to help you","Heres the code for the restroom","0000" ,{
+                    type: "choose",
+                    answers: [{
+                        text: "fuel ⛽",
+                        path: "fuel_options"
+                    }, {
+                        text: "snacks 🍪",
+                        path: "snack_options"
                     }]
                 }],
                 fuel_options: ["Please select following options:", {
@@ -5220,15 +5250,19 @@ var requirejs, require, define;
                 }],
                 regular: ["Please enter total gallons",{
                     type: "write",
-                    name: "Enter total amount in $",
-                    path: "regular_gallons"
+                    name: "amount",
+                    path: "confirm"
                 }],
-				regular_gallons: ["Please confirm total amount", "27*3=$81",{
-					type: "choose",
+                regular_gallons: ["Please confirm total amount",prices,{
+                    type: "choose",
                     answers: [{
-                        text: "confirm",
+                        text: "confirm and pay",
                         path: "bye-scroll"
-                    }]
+                    },{
+                        text: "go back",
+                        path: "fuel_options"
+                    }
+                    ]
                 }],
                 snack_options: ["Please select following options:", {
                     type: "choose",
@@ -5247,9 +5281,6 @@ var requirejs, require, define;
                     },{
                         text: "Coffee $2",
                         path: "coffee_select"
-                    },{
-                        text: "Donuts $1.5",
-                        path: "donuts_select"
                     }]
                 }],
                 chips_select: ["Select a brand:", {
@@ -5259,6 +5290,32 @@ var requirejs, require, define;
                         path: "select"
                     }, {
                         text: "Cheetos",
+                        path: "select"
+                    }]
+                }],
+                coffee_select: ["Select the type of coffee:", {
+                    type: "choose",
+                    answers: [{
+                        text: "Cappuccino",
+                        path: "select"
+                    }, {
+                        text: "Nescafe Dark Coffee",
+                        path: "select"
+                    }]
+                }],
+                candy_select: ["Select the type of candies:", {
+                    type: "choose",
+                    answers: [{
+                        text: "Snickers",
+                        path: "select"
+                    }, {
+                        text: "Toublourone",
+                        path: "select"
+                    },{
+                        text: "ghiradelli squares",
+                        path: "select"
+                    },{
+                        text: "M&M",
                         path: "select"
                     }]
                 }],
@@ -5299,10 +5356,11 @@ var requirejs, require, define;
                     name: "Enter total amount in $",
                     path: "confirm"
                 }],
-				confirm: ["Please confirm total amount", "$81",{
-					type: "choose",
+                confirm: ["Please confirm total amount", prices,{
+                    type: "choose",
                     answers: [{
-                        text: "confirm",
+                        // text: "confirm and pay",
+                        text:'<a href="st.html">pay with card</a>',
                         path: "bye-scroll"
                     }]
                 }],
@@ -5507,9 +5565,31 @@ var requirejs, require, define;
                     })
                 })
             }
-            var s = ["Hey! It's good to have you back!", "There you are again! 🙌", "Hey what's up?", "Hey, welcome back!", "Welcome back. 🤗", "Ciao!", "Grüetzi! 🇨🇭", "Bonjour mon ami!", "Hey! How are you doing? It's good to have you back."],
+            var s = ["Hey! It's good to have you back!", "There you are again! 🙌", "Hey what's up?", "Hey, welcome back!", "Welcome back. 🤗", "Hey! How are you doing? It's good to have you back."],
                 u = document.cookie.indexOf("hasSeenUX") >= 0,
-                c = document.cookie.indexOf("hasSeenChat") >= 0;
+//                  xhr = new XMLHttpRequest();
+   
+//     xhr.onreadystatechange = function() {
+//         var status;
+//         var data;
+//         // https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+//         if (xhr.readyState == 4) { // `DONE`
+//             status = xhr.status;
+//             if (status == 200) {
+//                 data = JSON.parse(xhr.responseText);
+//                 console.dir(data.fuel);
+//             } else {
+//                 errorHandler && errorHandler(status);
+//             }
+//         }
+//     };
+
+// xhr.open("GET", "https://e03e1b8e.ngrok.io/retrieve/order", false);
+// xhr.send();
+
+// console.log(xhr.status);
+// console.log(xhr.statusText);
+                c = document.cookie.indexOf("hasSeenChat") >= 0;    
             e.setItem("hasSeenChat", "true"),
                 function() {
                     if (r(), u) return a();
